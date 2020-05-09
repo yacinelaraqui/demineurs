@@ -1,97 +1,106 @@
 import java.util.Scanner;
-public class DemineurMain {
+public class Demineur1main {
 	
 	public static void main (String[] args) {
 
 	boolean jeu = false;
-    System.out.println ("DEMINEUR");
     System.out.println ();
-   	System.out.println ("REGLES DU JEU:");
+    System.out.println ("JEU DU DEMINEUR");
     System.out.println ();
-    System.out.println ("Vous disposez d'une grille contenant des mines cachees. En selectionnant une case, vous decouvrez la case.");
-    System.out.println ("Si vous devoilez une bombe, vous avez perdu. Sinon vous decouvrez une case qui affichera le nombre de bombes autour.");
-    System.out.println ("Le but du jeu est de detecter toutes les mines sans tomber sur l'une d'entre elles ! ");
+   	System.out.println ("     Alors, un petit temps libre? Viens t'amuser avec notre demineur ! Voici les regles du jeu : ");
+    System.out.println ();
+    System.out.println ("REGLES DU JEU:");
+    System.out.println ("     Tu disposes d'une grille contenant des mines cachees. En saisissant les numeros de la ligne et de la colonne d'une case, tu reveles son contenu.");
+    System.out.println ("     Si tu devoiles une mine, BOOM ! Tu exploses ! Sinon, le jeu continue et tu decouvres une nouvelle case qui affichera le nombre de mines autour.");
+    System.out.println ("     Ta mission, cher demineur, est de detecter toutes les mines sans finir en petits morceaux ! Bonne chance.");
     System.out.println ();
     
     do {
-   	System.out.println ("Commencez par choisir le niveau de difficulte :");
-    
+   	int choixNiv;
+   	
+   	System.out.println ("Commencons par choisir le niveau de difficulte :");
     System.out.println ();
 
-    int taille;
-    
-    do {
-    System.out.println ("Veuillez rentrer un des trois niveaux de difficulte :");
-   	System.out.println ("Pour Facile (tableau 5*5), 5 mines : tapez 5");
-   	System.out.println ("Pour Moyen (tableau 10*10), 15 mines : tapez 10");
-   	System.out.println ("Pour Difficile (tableau 15*15), 40 mines : tapez 15");
+    do {// interet du do-while : faire l'action car il s'agit de la condition (realiser l'action et si elle n'est pas conforme au while, la refaire.
+   	System.out.println ("   - Facile (petit champ de bataille 5*5), 5 mines : tape 1");
+   	System.out.println ("   - Moyen (gros champ de bataille 10*10), 15 mines : tape 2");
+   	System.out.println ("   - Difficile (enooorme champ de bataille 15*15), 40 mines : tape 3");
    	
    	Scanner sc1 = new Scanner(System.in);
-   	taille = sc1.nextInt(); 
+   	choixNiv = sc1.nextInt(); 
     System.out.println ();
     
+    if ((choixNiv != 1) && (choixNiv != 2) && (choixNiv != 3)){
+			System.out.println("Petit malin...Si tu veux vraiment jouer, choisis un numero valide");
+			System.out.println();
+		}
 
-    } while ((taille != 5) && (taille != 10) && (taille!= 15)); //Redemande le niveau s'il ne correspond à aucun des trois niveaux
+    } while ((choixNiv != 1) && (choixNiv != 2) && (choixNiv != 3)); //Redemande le niveau s'il ne correspond à aucun des trois niveaux
+
     
    	int mines = 0; 
-   	switch (taille){ // le nombre de mines varie selon la difficulté
-		case 5 :
-		mines=5;  
+   	int taille = 0;
+   	
+   	switch (choixNiv){ // le nombre de mines varie selon la difficulté
+		case 1 :
+		mines = 5;
+		taille = 5;
 		break;
-		case 10 :
-		mines=15;   
+		case 2 :
+		mines = 15; 
+		taille = 10;  
 		break;
-		case 15 :
-		mines=40;   
+		case 3 :
+		mines = 40;  
+		taille = 15; 
 	}
-	
-	
+		
    
-    Demineur p = new Demineur (taille, mines); 
+    Demineur1 champ = new Demineur1 (taille, mines); 
     
-    boolean [][]s = p.getstock (); 
+    boolean [][]s = champ.getstock (); 
 	
-    p.AffectationNombreMines ();
+    champ.AffectationNombreMines ();
    
-    int [][] monde = p.getmonde ();
+    int [][] plateau = champ.getplateau ();
     int ligne;
     int colonne;
     
-    boolean fin = p.Jeufini ();
+    boolean fin = champ.Jeufini ();
 	
 	do {
-		p.afficherJeu (s, monde);
+		champ.afficherJeu (s, plateau);
 		
 		Scanner sc = new Scanner (System.in);
 			
-			
-            System.out.println("Choisissez la colonne"); //saisie de la colonne de jeu
+			//RAJOUTER UN NOMBRE DE TOUUUR
+            System.out.println("Choisis le numero de la colonne"); //saisie de la colonne de jeu
             colonne = sc.nextInt();
-            while ( (colonne < 0) || (colonne >=taille)){
-            System.out.println("Impossible, faites un nouveau choix de colonne");
+            while ((colonne < 0) || (colonne >=taille)){
+            System.out.println("Non non non, choisis un nombre entre 0 et "+(taille-1));
             colonne = sc.nextInt(); 
 		}
             
             
 		
-            System.out.println("Choisissez la ligne "); // saisie de la ligne de jeu
+            System.out.println("Saisis maintenant le numero de ligne "); // saisie de la ligne de jeu
             ligne = sc.nextInt();
-            while ( (ligne < 0) || (ligne >=taille)){
-            System.out.println("Impossible ! Faites un nouveau choix de ligne");
+            while ((ligne < 0) || (ligne >=taille)){
+            System.out.println("Non non non, choisis un nombre entre 0 et "+(taille-1));
             ligne = sc.nextInt();
             System.out.println (); 
 		}
-		p.Jouer(s, ligne, colonne,monde);
-        fin = p.Jeufini ();
+		champ.Jouer(s, ligne, colonne,plateau);
+        fin = champ.Jeufini ();// le mettre apres chaque champ.jouer pour voir si le jeu est terminé.
         System.out.println ();
        
-	} while ((monde[ligne][colonne]!=-1)&&(fin==false));
+	} while ((plateau[ligne][colonne]!=-1)&&(fin==false));
 	
 	 
 	  //affichage de tout le plateau quand le joueur tombe sur une mine ou qu'il a gagné
 		
 			System.out.print("   ");
-	for(int c = 0; c<monde.length; c++){  //première ligne avec indication des colonnes
+	for(int c = 0; c<plateau.length; c++){  //première ligne avec indication des colonnes
 		if(c<10){
 			System.out.print(" "+c+"|");
 		}else{
@@ -99,15 +108,15 @@ public class DemineurMain {
 		}
 	}
 	System.out.println();
-    	for (int i = 0; i<monde.length; i++){
+    	for (int i = 0; i<plateau.length; i++){
         	if(i<10){  //première colonne avec indication des lignes
 				System.out.print(" "+i+"|");
 			}else{
 				System.out.print(i+"|");
 			}
-        	for(int j = 0; j<monde.length; j++){
-            	if(monde[i][j]!=-1){
-					System.out.print(" "+monde[i][j]+" ");
+        	for(int j = 0; j<plateau.length; j++){
+            	if(plateau[i][j]!=-1){
+					System.out.print(" "+plateau[i][j]+" ");
 				} else {
 					System.out.print(" * ");
 				}
@@ -116,9 +125,9 @@ public class DemineurMain {
     	}
     	
     	if (fin==true){ //si toutes les cases sont true sauf les cases contenant des mines = jeu gagné
-        	System.out.println("Bravo, vous avez gagne !!! :) ");
+        	System.out.println("Mission accomplie demineur! Toutes les mines ont ete localisees. Bien joue ! ");
     	}else{ //sinon c’est que le jeu est perdu
-        	System.out.println("Game Over ! :( ");
+        	System.out.println("BOOOOOOOOM !! Tu as fini en petits morceaux  ");
     	}
     	
     	 System.out.println ();
@@ -126,7 +135,7 @@ public class DemineurMain {
     	 // demander si le joueur veut rejouer
     	 
     	 Scanner sc2 = new Scanner (System.in);
-    	 System.out.println("Voulez-vous recommencer ?(oui=1, non=2)");
+    	 System.out.println("Une revanche?  Alors, tape 1, sinon, tape autre chose");
 			
 			
 				int rejouer=sc2.nextInt();
@@ -135,13 +144,10 @@ public class DemineurMain {
 						if (rejouer==1){
 							jeu=false;
 						
-						}else if (rejouer==2){
+						}else if (rejouer != 1){
 							jeu=true;
 						
-								System.out.println("Merci d'avoir joue au Demineur ! A bientot !");
-						}else if (rejouer!=1 && rejouer!=2){
-							System.out.println("Veuillez saisir 1 ou 2 svp");
-							rejouer=sc2.nextInt();
+								System.out.println("Reviens vite nous voir, le monde a besoin de demineurs comme toi ! ");
 						}
     	
 	}while (jeu==false);
